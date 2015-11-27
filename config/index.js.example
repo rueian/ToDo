@@ -1,0 +1,4 @@
+export const FB_APP_ID = '';
+export const FB_VERSION = 'v2.5';
+export const PARSE_ID = '';
+export const PARSE_KEY = '';
