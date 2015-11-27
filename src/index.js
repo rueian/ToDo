@@ -1,25 +1,16 @@
 import React from 'react';
 import { render } from 'react-dom';
 import Parse from 'parse';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import { FB_APP_ID, FB_VERSION, PARSE_ID, PARSE_KEY } from '../config';
-// import { App } from './App';
+import { App } from './App';
 
 function statusChangeCallback(response) {
-  console.log('statusChangeCallback', response);
   if (response.status === 'connected') {
     parseLogin();
   } else {
     showWelcome();
   }
-}
-
-function testAPI() {
-  console.log('Welcome!  Fetching your information.... ');
-  FB.api('/me', function(response) {
-    console.log('Successful login for: ' + response.name);
-    document.getElementById('status').innerHTML =
-      'Thanks for logging in, ' + response.name + '!';
-  });
 }
 
 function doFBLogin() {
@@ -47,12 +38,13 @@ function showWelcome() {
 }
 
 function showApp(user) {
-  console.log("parse", user);
+  render(<App user={user}/>, document.getElementById('content'));
+
   document.getElementById('welcome').classList.add("hidden");
   document.getElementById('content').classList.remove("hidden");
-  testAPI();
-  // render(<App />, document.getElementById('root'));
 }
+
+injectTapEventPlugin();
 
 Parse.initialize(PARSE_ID, PARSE_KEY);
 
