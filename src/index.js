@@ -35,7 +35,6 @@ function parseLogin() {
       showApp(user);
     },
     error: function(user, error) {
-      alert("User cancelled the Facebook login or did not fully authorize.");
     }
   });
 }
