@@ -15,6 +15,7 @@ import SelectField from 'material-ui/lib/select-field';
 import Snackbar from 'material-ui/lib/snackbar';
 import RefreshIndicator from 'material-ui/lib/refresh-indicator';
 import { TaskList } from './TaskList';
+import IconButton from 'material-ui/lib/icon-button';
 import Parse from 'parse';
 
 const SelectableList = SelectableContainerEnhance(List);
@@ -195,6 +196,10 @@ export class App extends Component {
           title={this.state.title}
           showMenuIconButton={true}
           onLeftIconButtonTouchTap={this._openMenu.bind(this)}/>
+        <IconButton iconClassName="fa fa-github white"
+          linkButton={true}
+          href="https://github.com/rueian/ToDo"
+          style={{position: 'fixed', top: 8, right: 12, zIndex: 5}}/>
         <RefreshIndicator size={50} left={window.innerWidth / 2 - 25} top={100} status={this.state.loadingStatus} />
         <div style={{padding: 12, maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', marginTop: 60}}>
           <TaskList todos={this.state.todos} handleToDoClick={this._handleToDoClick.bind(this)}/>

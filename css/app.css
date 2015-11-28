@@ -57,3 +57,7 @@ html, body {
 .archive-list {
   background-color: #8e24aa !important;
 }
+
+.white {
+  color: white !important;
+}
