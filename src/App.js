@@ -76,8 +76,10 @@ export class App extends Component {
     if (value == 3) return;
     if (value == 1) {
       this.setState({selectedNav: value, title: '待辦事項'});
+      this._getToDos();
     } else if (value == 2) {
       this.setState({selectedNav: value, title: '封存事項'});
+      this._getToDos(true);
     }
 
     this.refs.leftNav.toggle();
@@ -131,6 +133,16 @@ export class App extends Component {
     snackbar.dismiss();
   }
 
+  _handleToDoClick(index, event, value) {
+    let todo = this.state.todos[index];
+    todo.set('isDone', value);
+    todo.save().then((res) => {
+      this.setState({todos: this.state.todos.filter((t) => {return t.id != todo.id})});
+    }, (err) => {
+      console.error(err);
+    })
+  }
+
   render() {
     const userPhoto = '//graph.facebook.com/v2.5/' + this.state.user.id + '/picture?type=large';
     const modalAction = [
@@ -147,9 +159,7 @@ export class App extends Component {
       <div>
         <AppBar title={this.state.title} showMenuIconButton={true} onLeftIconButtonTouchTap={this._openMenu.bind(this)}/>
         <div style={{padding: 12, maxWidth: 800, marginLeft: 'auto', marginRight: 'auto'}}>
-          <Paper zDepth={1}>
-            <TaskList todos={this.state.todos}/>
-          </Paper>
+          <TaskList todos={this.state.todos} handleToDoClick={this._handleToDoClick.bind(this)}/>
         </div>
         <FloatingActionButton style={{position: 'fixed', right: 20, bottom: 20}} onTouchTap={this._openModal.bind(this)}>
           <FontIcon className="material-icons">add</FontIcon>
