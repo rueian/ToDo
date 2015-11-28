@@ -16,11 +16,7 @@ function statusChangeCallback(response) {
 function doFBLogin() {
   document.getElementById('loading').classList.remove("hidden");
   document.getElementById('login').classList.add("hidden");
-  FB.getLoginStatus(function(response) {
-    showWelcome();
-    if (response == 'connected') return;
-    parseLogin();
-  });
+  parseLogin();
 }
 
 function parseLogin() {
@@ -29,6 +25,8 @@ function parseLogin() {
       showApp(user);
     },
     error: function(user, error) {
+      document.getElementById('loading').classList.add("hidden");
+      document.getElementById('login').classList.remove("hidden");
     }
   });
 }
