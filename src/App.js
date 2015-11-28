@@ -194,12 +194,19 @@ export class App extends Component {
       coverPath = this.state.user.cover.source;
     }
 
+    let title = this.state.title;
+    if (this.state.loadingStatus == 'loading') {
+      title += ' (...)';
+    } else {
+      title += ' (' + this.state.todos.length + ')';
+    }
+
     return (
       <div>
         <AppBar
           className={this.state.title == '待辦事項' ? 'todo-list' : 'archive-list'}
           style={{position: 'fixed', top: 0, left: 0}}
-          title={this.state.title}
+          title={title}
           showMenuIconButton={true}
           onLeftIconButtonTouchTap={this._openMenu.bind(this)}/>
         <IconButton iconClassName="fa fa-github white"
