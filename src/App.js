@@ -157,8 +157,12 @@ export class App extends Component {
 
     return (
       <div>
-        <AppBar title={this.state.title} showMenuIconButton={true} onLeftIconButtonTouchTap={this._openMenu.bind(this)}/>
-        <div style={{padding: 12, maxWidth: 800, marginLeft: 'auto', marginRight: 'auto'}}>
+        <AppBar
+          style={{position: 'fixed', top: 0, left: 0}}
+          title={this.state.title}
+          showMenuIconButton={true}
+          onLeftIconButtonTouchTap={this._openMenu.bind(this)}/>
+        <div style={{padding: 12, maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', marginTop: 60}}>
           <TaskList todos={this.state.todos} handleToDoClick={this._handleToDoClick.bind(this)}/>
         </div>
         <FloatingActionButton style={{position: 'fixed', right: 20, bottom: 20}} onTouchTap={this._openModal.bind(this)}>
@@ -168,7 +172,7 @@ export class App extends Component {
           title="創建 ToDo"
           actions={modalAction}
           open={this.state.showDialog}
-          onRequestClose={this._closeModal}>
+          onRequestClose={this._closeModal.bind(this)}>
           <TextField ref="input"
             errorText={this.state.titleError}
             hintText="12/4 要交 Web App 作業"
