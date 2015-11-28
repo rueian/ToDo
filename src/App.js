@@ -138,9 +138,7 @@ export class App extends Component {
   }
 
   _openModal(e) {
-    this.setState({showDialog: true}, () => {
-      this.refs.input.focus();
-    });
+    this.setState({showDialog: true});
   }
 
   _closeModal(e) {
@@ -193,6 +191,10 @@ export class App extends Component {
     if (this.state.user.friends) {
       users = users.concat(this.state.user.friends.data);
     }
+    let coverPath = '';
+    if (this.state.user.cover) {
+      coverPath = this.state.user.cover.source;
+    }
 
     return (
       <div>
@@ -217,7 +219,8 @@ export class App extends Component {
           title="創建 ToDo"
           actions={modalAction}
           open={this.state.showDialog}
-          onRequestClose={this._closeModal.bind(this)}>
+          onRequestClose={this._closeModal.bind(this)}
+          contentStyle={{width: '95%'}}>
           <TextField ref="input"
             errorText={this.state.titleError}
             hintText="12/4 要交 Web App 作業"
@@ -252,7 +255,7 @@ export class App extends Component {
                   subtitle={this.state.user.email}
                   avatar={'//graph.facebook.com/v2.5/' + this.state.user.id + '/picture?type=large'} />
                 }>
-                <img src={this.state.user.cover.source}/>
+                <img src={coverPath}/>
               </CardMedia>
             </Card>
           }>
