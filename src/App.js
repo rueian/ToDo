@@ -8,7 +8,7 @@ import ListItem from 'material-ui/lib/lists/list-item';
 import ListDivider from 'material-ui/lib/lists/list-divider';
 import FontIcon from 'material-ui/lib/font-icon';
 import FloatingActionButton from 'material-ui/lib/floating-action-button';
-import Avatar from 'material-ui/lib/avatar';
+import { FBAvatar } from './FBAvatar';
 import Dialog from 'material-ui/lib/dialog';
 import TextField from 'material-ui/lib/text-field';
 import SelectField from 'material-ui/lib/select-field';
@@ -53,7 +53,6 @@ export class App extends Component {
       query.notEqualTo('isDone', true);
     }
     query.descending('createdAt');
-    console.log('query',query,this.state.user.id);
     query.find().then((todos) => {
       this.setState({todos: todos, isLoading: false});
     }, (err) => {
@@ -63,7 +62,6 @@ export class App extends Component {
 
   _getFB() {
     FB.api('/me', {fields: 'name,friends'}, (response) => {
-      console.log(response)
       this.setState({user: response});
     });
   }
@@ -144,7 +142,6 @@ export class App extends Component {
   }
 
   render() {
-    const userPhoto = '//graph.facebook.com/v2.5/' + this.state.user.id + '/picture?type=large';
     const modalAction = [
       { text: '取消', onTouchTap: this._closeModal.bind(this) },
       { text: '創建', onTouchTap: this._newToDo.bind(this), ref: 'submit' }
@@ -190,7 +187,7 @@ export class App extends Component {
           autoHideDuration={1000}
           onActionTouchTap={this._handleSnackbarCancel.bind(this)}/>
         <LeftNav ref="leftNav" docked={false} selectedIndex={1}
-          header={<ListItem primaryText={this.state.user.name} leftAvatar={<Avatar src={userPhoto} />} />}>
+          header={<ListItem primaryText={this.state.user.name} leftAvatar={FBAvatar(this.state.user.id)} />}>
           <SelectableList
             valueLink={{value: this.state.selectedNav, requestChange: this._handleNavSelected.bind(this)}}>
             <ListItem value={1} primaryText="待辦事項" leftIcon={<FontIcon className="material-icons">inbox</FontIcon>} />

@@ -1,25 +1,21 @@
 import React, { Component } from 'react';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
-import Avatar from 'material-ui/lib/avatar';
+import { FBAvatar } from './FBAvatar';
 import Checkbox from 'material-ui/lib/checkbox';
 
 export class TaskList extends Component {
   render() {
     let todos = this.props.todos.map((todo, index) => {
-      let userPhoto = '//graph.facebook.com/v2.5/' + todo.get('creatorId') + '/picture?type=large';
       return (
         <ListItem
+          className={todo.get('isDone') ? 'doned' : 'archived'}
           key={todo.id}
           primaryText={todo.get('title')}
           leftCheckbox={<Checkbox defaultChecked={todo.get('isDone')} onCheck={this.props.handleToDoClick.bind(null, index)}/>}
-          rightAvatar={<Avatar src={userPhoto} />}/>
+          rightAvatar={FBAvatar(todo.get('creatorId'))}/>
       )
     });
-    return (
-      <List>
-        {todos}
-      </List>
-    );
+    return (<List>{todos}</List>);
   }
 }
