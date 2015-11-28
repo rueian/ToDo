@@ -2,6 +2,10 @@
   display: none !important;
 }
 
+html {
+  font-family: 'Roboto', sans-serif;
+}
+
 html, body {
   height: 100%;
   margin: 0;
@@ -23,7 +27,7 @@ html, body {
 
 #logo h1 {
   color: white;
-  font-size: 10em;
+  font-size: 8em;
 }
 
 #welcome .panel {
