@@ -5,37 +5,36 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import { FB_APP_ID, FB_VERSION, PARSE_ID, PARSE_KEY, PUBNUB_PUB_KEY, PUBNUB_SUB_KEY } from '../config';
 import { App } from './App';
 
-function statusChangeCallback(response) {
-  if (response.status === 'connected') {
-    parseLogin();
-  } else {
-    showWelcome();
-  }
-}
-
-function doFBLogin() {
+function showLoading() {
   document.getElementById('loading').classList.remove("hidden");
   document.getElementById('login').classList.add("hidden");
-  parseLogin();
+}
+
+function showLogin() {
+  document.getElementById('loading').classList.add("hidden");
+  document.getElementById('login').classList.remove("hidden");
 }
 
 function parseLogin() {
+  showLoading();
+
+  let noTimeout = true;
+  let timeoutId = setTimeout(() => {
+    noTimeout = false;
+    showLogin();
+  }, 5000);
+
   Parse.FacebookUtils.logIn('public_profile,email,user_friends', {
     success: function(user) {
-      showApp(user);
+      if (noTimeout) {
+        clearTimeout(timeoutId);
+        showApp(user);
+      }
     },
     error: function(user, error) {
-      document.getElementById('loading').classList.add("hidden");
-      document.getElementById('login').classList.remove("hidden");
+      alert('登入失敗，請稍候再試')
     }
   });
-}
-
-function showWelcome() {
-  document.getElementById('welcome').classList.remove("hidden");
-  document.getElementById('loading').classList.add("hidden");
-  document.getElementById('login').classList.remove("hidden");
-  document.getElementById('content').classList.add("hidden");
 }
 
 function showApp(user) {
@@ -62,13 +61,15 @@ window.fbAsyncInit = function() {
     version: FB_VERSION
   });
 
-  FB.getLoginStatus(function(response) {
-    statusChangeCallback(response);
-  });
+  if (Parse.User.current()) {
+    showApp(Parse.User.current());
+  } else {
+    showLogin();
+  }
 };
 
 document.addEventListener("DOMContentLoaded", function(event) {
-  document.getElementById("fb_login_btn").addEventListener("click", doFBLogin);
+  document.getElementById("fb_login_btn").addEventListener("click", parseLogin);
 });
 
 (function(d, s, id) {

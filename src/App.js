@@ -166,9 +166,7 @@ export class App extends Component {
 
   _onLogout() {
     Parse.User.logOut().then(() => {
-      FB.logout((response) => {
-        location.reload();
-      });
+      location.reload();
     });
   }
 
@@ -239,7 +237,7 @@ export class App extends Component {
           actionFocus="submit"
           open={this.state.showLogoutModal}
           onRequestClose={this._handleLogoutModalClose.bind(this)}>
-          這將會連同您的 Facebook 帳號一起登出
+          這並不會將您的 Facebook 帳號一起登出
         </Dialog>
         <Snackbar ref="snackbar"
           message="ToDo 創建成功"
