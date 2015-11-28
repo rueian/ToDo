@@ -13,6 +13,7 @@ import Dialog from 'material-ui/lib/dialog';
 import TextField from 'material-ui/lib/text-field';
 import SelectField from 'material-ui/lib/select-field';
 import Snackbar from 'material-ui/lib/snackbar';
+import RefreshIndicator from 'material-ui/lib/refresh-indicator';
 import { TaskList } from './TaskList';
 import Parse from 'parse';
 
@@ -25,7 +26,7 @@ export class App extends Component {
     super(props);
     this.state = {
       title: '待辦事項',
-      isLoading: true,
+      loadingStatus: 'loading',
       selectValue: props.user.get('authData').facebook.id,
       selectedNav: 1,
       titleError: '',
@@ -43,7 +44,7 @@ export class App extends Component {
   }
 
   _getToDos(isDone) {
-    this.setState({isLoading: true});
+    this.setState({loadingStatus: 'loading'});
 
     let query = new Parse.Query(Todo);
     query.equalTo('userId', this.state.user.id);
@@ -54,7 +55,7 @@ export class App extends Component {
     }
     query.descending('createdAt');
     query.find().then((todos) => {
-      this.setState({todos: todos, isLoading: false});
+      this.setState({todos: todos, loadingStatus: 'hide'});
     }, (err) => {
       console.error(err);
     });
@@ -160,6 +161,7 @@ export class App extends Component {
           title={this.state.title}
           showMenuIconButton={true}
           onLeftIconButtonTouchTap={this._openMenu.bind(this)}/>
+        <RefreshIndicator size={50} left={window.innerWidth / 2 - 25} top={100} status={this.state.loadingStatus} />
         <div style={{padding: 12, maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', marginTop: 60}}>
           <TaskList todos={this.state.todos} handleToDoClick={this._handleToDoClick.bind(this)}/>
         </div>
