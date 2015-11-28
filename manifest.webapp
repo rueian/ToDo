@@ -1,0 +1,15 @@
+{
+  "name": "ToDo",
+  "description": "A simple ToDo list that enables you to easily assign tasks to your friends on Facebook.",
+  "launch_path": "/index.html",
+  "icons": {
+    "128": "/icon/128.png",
+    "512": "/icon/512.png"
+  },
+  "developer": {
+    "name": "Ruian",
+    "url": "https://github.com/rueian"
+  },
+  "orientation": [ "portrait-primary" ],
+  "type": "web"
+}
