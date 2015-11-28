@@ -31,6 +31,7 @@ export class App extends Component {
       selectedNav: 1,
       titleError: '',
       showDialog: false,
+      showLogoutModal: false,
       user: {
         id: props.user.get('authData').facebook.id
       },
@@ -84,13 +85,14 @@ export class App extends Component {
   }
 
   _handleNavSelected(e, value) {
-    if (value == 3) return;
     if (value == 1) {
       this.setState({selectedNav: value, title: '待辦事項'});
       this._getToDos();
     } else if (value == 2) {
       this.setState({selectedNav: value, title: '封存事項'});
       this._getToDos(true);
+    } else if (value == 3) {
+      this.setState({showLogoutModal: true});
     }
 
     this.refs.leftNav.toggle();
@@ -157,10 +159,27 @@ export class App extends Component {
     })
   }
 
+  _onLogout() {
+    Parse.User.logOut().then(() => {
+      FB.logout((response) => {
+        location.reload();
+      });
+    });
+  }
+
+  _handleLogoutModalClose() {
+    this.setState({showLogoutModal: false});
+  }
+
   render() {
     const modalAction = [
       { text: '取消', onTouchTap: this._closeModal.bind(this) },
       { text: '創建', onTouchTap: this._newToDo.bind(this), ref: 'submit' }
+    ];
+
+    const logoutActions = [
+      { text: '取消' },
+      { text: '登出', onTouchTap: this._onLogout.bind(this), ref: 'submit' }
     ];
 
     let users = [{id: this.state.user.id, name: '自己'}];
@@ -199,6 +218,14 @@ export class App extends Component {
             valueMember="id"
             displayMember="name"
             menuItems={users} />
+        </Dialog>
+        <Dialog
+          title="你確定要登出嗎？"
+          actions={logoutActions}
+          actionFocus="submit"
+          open={this.state.showLogoutModal}
+          onRequestClose={this._handleLogoutModalClose.bind(this)}>
+          這將會連同您的 Facebook 帳號一起登出
         </Dialog>
         <Snackbar ref="snackbar"
           message="ToDo 創建成功"
