@@ -100,8 +100,8 @@ export class App extends Component {
     const snackbar = this.refs.snackbar;
 
     let title = this.refs.input.getValue();
-    let userId = this.state.user.id;
-    let creatorId = this.state.selectValue || userId;
+    let creatorId = this.state.user.id;
+    let userId = this.state.selectValue || userId;
 
     if (!title) {
       return this.setState({titleError: '請輸入內容'});
@@ -120,7 +120,7 @@ export class App extends Component {
     }).then((todo) => {
       snackbar.show();
       this.props.pubnub.publish({
-        channel: creatorId,
+        channel: userId,
         message: 'refresh'
       });
     }, (err) => {
@@ -192,8 +192,9 @@ export class App extends Component {
             errorText={this.state.titleError}
             hintText="12/4 要交 Web App 作業"
             floatingLabelText="輸入待辦事項內容" />
+          <br />
           <SelectField
-            valueLink={{value: this.state.user.id, requestChange: this._handleSelectValueChange.bind(this)}}
+            valueLink={{value: this.state.selectValue, requestChange: this._handleSelectValueChange.bind(this)}}
             floatingLabelText="選擇指派對象"
             valueMember="id"
             displayMember="name"

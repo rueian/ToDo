@@ -10,7 +10,7 @@ module.exports = {
     './css/index'
   ],
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: path.join(__dirname, 'parse/public/static'),
     filename: 'bundle.js',
     publicPath: '/static/'
   },

@@ -14,7 +14,10 @@ function statusChangeCallback(response) {
 }
 
 function doFBLogin() {
+  document.getElementById('loading').classList.remove("hidden");
+  document.getElementById('login').classList.add("hidden");
   FB.getLoginStatus(function(response) {
+    showWelcome();
     if (response == 'connected') return;
     parseLogin();
   });
@@ -40,7 +43,8 @@ function showWelcome() {
 function showApp(user) {
   let pubnub = PUBNUB.init({
       publish_key: PUBNUB_PUB_KEY,
-      subscribe_key: PUBNUB_SUB_KEY
+      subscribe_key: PUBNUB_SUB_KEY,
+      ssl: true
   });
   render(<App user={user} pubnub={pubnub}/>, document.getElementById('content'));
 

@@ -2,5 +2,7 @@
 node_modules
 npm-debug.log
 dist
-parse
 config/index.js
+parse/public/static
+parse/.parse.local
+parse/.parse.project
