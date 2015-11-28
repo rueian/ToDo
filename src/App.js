@@ -155,6 +155,7 @@ export class App extends Component {
     return (
       <div>
         <AppBar
+          className={this.state.title == '待辦事項' ? 'todo-list' : 'archive-list'}
           style={{position: 'fixed', top: 0, left: 0}}
           title={this.state.title}
           showMenuIconButton={true}

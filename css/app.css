@@ -45,3 +45,11 @@ html, body {
   line-height: 1.43;
   text-decoration: none;
 }
+
+.todo-list {
+  background-color: #1e88e5 !important;
+}
+
+.archive-list {
+  background-color: #8e24aa !important;
+}
