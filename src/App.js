@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import AppBar from 'material-ui/lib/app-bar';
 import LeftNav from 'material-ui/lib/left-nav';
 import Paper from 'material-ui/lib/paper';
+import Card from 'material-ui/lib/card/card';
+import CardMedia from 'material-ui/lib/card/card-media';
+import CardHeader from 'material-ui/lib/card/card-header';
 import { SelectableContainerEnhance } from 'material-ui/lib/hoc/selectable-enhance';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
@@ -34,7 +37,10 @@ export class App extends Component {
       showDialog: false,
       showLogoutModal: false,
       user: {
-        id: props.user.get('authData').facebook.id
+        id: props.user.get('authData').facebook.id,
+        cover: {
+          source: ''
+        }
       },
       todos: []
     };
@@ -76,7 +82,7 @@ export class App extends Component {
   }
 
   _getFB() {
-    FB.api('/me', {fields: 'name,friends'}, (response) => {
+    FB.api('/me', {fields: 'name,friends,cover,email'}, (response) => {
       this.setState({user: response});
     });
   }
@@ -238,7 +244,18 @@ export class App extends Component {
           autoHideDuration={1000}
           onActionTouchTap={this._handleSnackbarCancel.bind(this)}/>
         <LeftNav ref="leftNav" docked={false} selectedIndex={1}
-          header={<ListItem primaryText={this.state.user.name} leftAvatar={FBAvatar(this.state.user.id)} />}>
+          header={
+            <Card>
+              <CardMedia style={{height: 180}} overlay={
+                <CardHeader
+                  title={this.state.user.name}
+                  subtitle={this.state.user.email}
+                  avatar={'//graph.facebook.com/v2.5/' + this.state.user.id + '/picture?type=large'} />
+                }>
+                <img src={this.state.user.cover.source}/>
+              </CardMedia>
+            </Card>
+          }>
           <SelectableList
             valueLink={{value: this.state.selectedNav, requestChange: this._handleNavSelected.bind(this)}}>
             <ListItem value={1} primaryText="待辦事項" leftIcon={<FontIcon className="material-icons">inbox</FontIcon>} />
