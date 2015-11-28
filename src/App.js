@@ -36,11 +36,23 @@ export class App extends Component {
       },
       todos: []
     };
+    var PUBNUB_demo = PUBNUB.init({
+        publish_key: 'Your Publish Key Here',
+        subscribe_key: 'Your Subscribe Key Here'
+    });
   }
 
   componentDidMount() {
     this._getFB();
     this._getToDos();
+    this.props.pubnub.subscribe({
+      channel: this.state.user.id,
+      message: (message) => {
+        if (this.state.title == '待辦事項') {
+          this._getToDos();
+        }
+      }
+    });
   }
 
   _getToDos(isDone) {
@@ -107,7 +119,10 @@ export class App extends Component {
       creatorId
     }).then((todo) => {
       snackbar.show();
-      this._getToDos();
+      this.props.pubnub.publish({
+        channel: creatorId,
+        message: 'refresh'
+      });
     }, (err) => {
       console.error(err);
     });

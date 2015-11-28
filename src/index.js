@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import Parse from 'parse';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import { FB_APP_ID, FB_VERSION, PARSE_ID, PARSE_KEY } from '../config';
+import { FB_APP_ID, FB_VERSION, PARSE_ID, PARSE_KEY, PUBNUB_PUB_KEY, PUBNUB_SUB_KEY } from '../config';
 import { App } from './App';
 
 function statusChangeCallback(response) {
@@ -38,7 +38,11 @@ function showWelcome() {
 }
 
 function showApp(user) {
-  render(<App user={user}/>, document.getElementById('content'));
+  let pubnub = PUBNUB.init({
+      publish_key: PUBNUB_PUB_KEY,
+      subscribe_key: PUBNUB_SUB_KEY
+  });
+  render(<App user={user} pubnub={pubnub}/>, document.getElementById('content'));
 
   document.getElementById('welcome').classList.add("hidden");
   document.getElementById('content').classList.remove("hidden");

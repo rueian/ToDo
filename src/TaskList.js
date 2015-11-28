@@ -9,7 +9,7 @@ export class TaskList extends Component {
     let todos = this.props.todos.map((todo, index) => {
       return (
         <ListItem
-          style={{'text-decoration': todo.get('isDone') ? 'line-through' : 'initial'}}
+          style={{textDecoration: todo.get('isDone') ? 'line-through' : 'initial'}}
           key={todo.id}
           primaryText={todo.get('title')}
           leftCheckbox={<Checkbox defaultChecked={todo.get('isDone')} onCheck={this.props.handleToDoClick.bind(null, index)}/>}
