@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
 import { avatarPath } from './avatarPath';
-import Avatar from 'material-ui/lib/Avatar';
+import Avatar from 'material-ui/lib/avatar';
 import Checkbox from 'material-ui/lib/checkbox';
 
 export class TaskList extends Component {

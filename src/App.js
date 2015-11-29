@@ -6,13 +6,13 @@ import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import Dialog from 'material-ui/lib/dialog';
 import TextField from 'material-ui/lib/text-field';
 import SelectField from 'material-ui/lib/select-field';
-import Snackbar from 'material-ui/lib/snackbar';
 import RefreshIndicator from 'material-ui/lib/refresh-indicator';
 import { TaskList } from './TaskList';
 import IconButton from 'material-ui/lib/icon-button';
 import Parse from 'parse';
 import { NAVS } from './navs'
 import { Nav } from './nav';
+import { Snackbars } from './Snackbars';
 
 const Todo = Parse.Object.extend("Todo");
 
@@ -93,7 +93,7 @@ export class App extends Component {
   }
 
   _newToDo() {
-    const snackbar = this.refs.snackbar;
+    const snackbar = this.refs.snackbars.refs.success;
 
     let title = this.refs.input.getValue();
     let creatorId = this.state.user.id;
@@ -146,11 +146,6 @@ export class App extends Component {
 
   _handleSelectValueChange(value) {
     this.setState({selectValue: value});
-  }
-
-  _handleSnackbarCancel() {
-    const snackbar = this.refs.snackbar;
-    snackbar.dismiss();
   }
 
   _handleToDoClick(index, event, value) {
@@ -241,12 +236,10 @@ export class App extends Component {
           onRequestClose={this._handleLogoutModalClose.bind(this)}>
           這並不會將您的 Facebook 帳號一起登出
         </Dialog>
-        <Snackbar ref="snackbar"
-          message="ToDo 創建成功"
-          action="取消"
-          autoHideDuration={1000}
-          onActionTouchTap={this._handleSnackbarCancel.bind(this)}/>
+
         <Nav ref="nav" user={this.state.user} selectedNav={this.state.selectedNav} handleNavSelected={this._handleNavSelected.bind(this)} />
+
+        <Snackbars ref="snackbars" />
       </div>
     );
   }
