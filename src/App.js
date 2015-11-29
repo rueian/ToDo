@@ -20,6 +20,7 @@ import RefreshIndicator from 'material-ui/lib/refresh-indicator';
 import { TaskList } from './TaskList';
 import IconButton from 'material-ui/lib/icon-button';
 import Parse from 'parse';
+import { NAVS } from './navs'
 
 const SelectableList = SelectableContainerEnhance(List);
 const Todo = Parse.Object.extend("Todo");
@@ -29,7 +30,6 @@ export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: '待辦事項',
       loadingStatus: 'loading',
       selectValue: props.user.get('authData').facebook.id,
       selectedNav: 1,
@@ -52,7 +52,7 @@ export class App extends Component {
     this.props.pubnub.subscribe({
       channel: this.state.user.id,
       message: (message) => {
-        if (this.state.title == '待辦事項') {
+        if (this.state.selectedNav == 0) {
           this._getToDos();
         }
       }
@@ -88,13 +88,13 @@ export class App extends Component {
   }
 
   _handleNavSelected(e, value) {
-    if (value == 1) {
-      this.setState({selectedNav: value, title: '待辦事項'});
+    if (value == 0) {
+      this.setState({selectedNav: value});
       this._getToDos();
-    } else if (value == 2) {
-      this.setState({selectedNav: value, title: '封存事項'});
+    } else if (value == 1) {
+      this.setState({selectedNav: value});
       this._getToDos(true);
-    } else if (value == 3) {
+    } else if (value == 2) {
       this.setState({showLogoutModal: true});
     }
 
@@ -202,7 +202,7 @@ export class App extends Component {
       coverPath = this.state.user.cover.source;
     }
 
-    let title = this.state.title;
+    let title = NAVS[this.state.selectedNav].title;
     if (this.state.loadingStatus == 'loading') {
       title += ' (...)';
     } else {
@@ -212,7 +212,7 @@ export class App extends Component {
     return (
       <div>
         <AppBar
-          className={this.state.title == '待辦事項' ? 'todo-list' : 'archive-list'}
+          className={this.state.selectedNav == 0 ? 'todo-list' : 'archive-list'}
           style={{position: 'fixed', top: 0, left: 0}}
           title={title}
           showMenuIconButton={true}
@@ -274,10 +274,10 @@ export class App extends Component {
           }>
           <SelectableList
             valueLink={{value: this.state.selectedNav, requestChange: this._handleNavSelected.bind(this)}}>
-            <ListItem value={1} primaryText="待辦事項" leftIcon={<FontIcon className="material-icons">inbox</FontIcon>} />
-            <ListItem value={2} primaryText="封存事項" leftIcon={<FontIcon className="material-icons">archive</FontIcon>} />
+            <ListItem value={0} primaryText="待辦事項" leftIcon={<FontIcon className="material-icons">inbox</FontIcon>} />
+            <ListItem value={1} primaryText="封存事項" leftIcon={<FontIcon className="material-icons">archive</FontIcon>} />
             <ListDivider />
-            <ListItem value={3} primaryText="登出" leftIcon={<FontIcon className="material-icons">exit_to_app</FontIcon>} />
+            <ListItem value={2} primaryText="登出" leftIcon={<FontIcon className="material-icons">exit_to_app</FontIcon>} />
           </SelectableList>
         </LeftNav>
       </div>
