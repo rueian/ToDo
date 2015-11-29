@@ -120,12 +120,24 @@ export class App extends Component {
 
     this.setState({showDialog: false});
 
-    let todo = new Todo();
+    let userQuery = new Parse.Query(Parse.User);
+    userQuery.equalTo('facebookId', userId);
+    userQuery.first().then((user) => {
+      let todo = new Todo();
+      let acl = new Parse.ACL();
 
-    todo.save({
-      title,
-      userId,
-      creatorId
+      acl.setReadAccess(user, true);
+      acl.setWriteAccess(user, true);
+
+      todo.setACL(acl);
+
+      return todo.save({
+        title,
+        userId,
+        creatorId
+      });
+    }, (err) => {
+      console.error(err);
     }).then((todo) => {
       snackbar.show();
       this.props.pubnub.publish({

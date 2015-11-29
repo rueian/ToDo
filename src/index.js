@@ -28,7 +28,12 @@ function parseLogin() {
     success: function(user) {
       if (noTimeout) {
         clearTimeout(timeoutId);
-        showApp(user);
+        if (user.get('facebookId')) {
+          showApp(user);
+        } else {
+          user.set('facebookId', user.get('authData').facebook.id);
+          user.save().then(() => showApp(user));
+        }
       }
     },
     error: function(user, error) {
