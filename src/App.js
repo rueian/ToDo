@@ -189,7 +189,7 @@ export class App extends Component {
     if (this.state.user.friends) {
       users = users.concat(this.state.user.friends.data);
     }
-    let coverPath = 'default.jpg';
+    let coverPath = '/img/default-cover.jpg';
     if (this.state.user.cover) {
       coverPath = this.state.user.cover.source;
     }

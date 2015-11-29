@@ -3,8 +3,8 @@
   "description": "A simple ToDo list that enables you to easily assign tasks to your friends on Facebook.",
   "launch_path": "/index.html",
   "icons": {
-    "128": "/icon/128.png",
-    "512": "/icon/512.png"
+    "128": "/img/128.png",
+    "512": "/img/512.png"
   },
   "developer": {
     "name": "Ruian",
