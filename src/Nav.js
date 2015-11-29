@@ -8,6 +8,7 @@ import ListItem from 'material-ui/lib/lists/list-item';
 import ListDivider from 'material-ui/lib/lists/list-divider';
 import FontIcon from 'material-ui/lib/font-icon';
 import { SelectableContainerEnhance } from 'material-ui/lib/hoc/selectable-enhance';
+import { avatarPath } from './avatarPath';
 import { NAVS } from './navs'
 
 const SelectableList = SelectableContainerEnhance(List);
@@ -34,7 +35,7 @@ export class Nav extends Component {
               <CardHeader
                 title={this.props.user.name}
                 subtitle={this.props.user.email}
-                avatar={'//graph.facebook.com/v2.5/' + this.props.user.id + '/picture?type=large'} />
+                avatar={avatarPath(this.props.user.id)} />
               }>
               <img src={coverPath}/>
             </CardMedia>

@@ -3,7 +3,6 @@ import AppBar from 'material-ui/lib/app-bar';
 import Paper from 'material-ui/lib/paper';
 import FontIcon from 'material-ui/lib/font-icon';
 import FloatingActionButton from 'material-ui/lib/floating-action-button';
-import { FBAvatar } from './FBAvatar';
 import Dialog from 'material-ui/lib/dialog';
 import TextField from 'material-ui/lib/text-field';
 import SelectField from 'material-ui/lib/select-field';
