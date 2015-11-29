@@ -44,10 +44,6 @@ export class App extends Component {
       },
       todos: []
     };
-    var PUBNUB_demo = PUBNUB.init({
-        publish_key: 'Your Publish Key Here',
-        subscribe_key: 'Your Subscribe Key Here'
-    });
   }
 
   componentDidMount() {
