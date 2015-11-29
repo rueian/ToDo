@@ -1,27 +1,19 @@
 import React, { Component } from 'react';
 import AppBar from 'material-ui/lib/app-bar';
-import LeftNav from 'material-ui/lib/left-nav';
 import Paper from 'material-ui/lib/paper';
-import Card from 'material-ui/lib/card/card';
-import CardMedia from 'material-ui/lib/card/card-media';
-import CardHeader from 'material-ui/lib/card/card-header';
-import { SelectableContainerEnhance } from 'material-ui/lib/hoc/selectable-enhance';
-import List from 'material-ui/lib/lists/list';
-import ListItem from 'material-ui/lib/lists/list-item';
-import ListDivider from 'material-ui/lib/lists/list-divider';
 import FontIcon from 'material-ui/lib/font-icon';
 import FloatingActionButton from 'material-ui/lib/floating-action-button';
-import { FBAvatar } from './FBAvatar';
 import Dialog from 'material-ui/lib/dialog';
 import TextField from 'material-ui/lib/text-field';
 import SelectField from 'material-ui/lib/select-field';
-import Snackbar from 'material-ui/lib/snackbar';
 import RefreshIndicator from 'material-ui/lib/refresh-indicator';
 import { TaskList } from './TaskList';
 import IconButton from 'material-ui/lib/icon-button';
 import Parse from 'parse';
+import { NAVS } from './navs'
+import { Nav } from './nav';
+import { Snackbars } from './Snackbars';
 
-const SelectableList = SelectableContainerEnhance(List);
 const Todo = Parse.Object.extend("Todo");
 
 export class App extends Component {
@@ -29,7 +21,6 @@ export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: '待辦事項',
       loadingStatus: 'loading',
       selectValue: props.user.get('authData').facebook.id,
       selectedNav: 1,
@@ -44,10 +35,6 @@ export class App extends Component {
       },
       todos: []
     };
-    var PUBNUB_demo = PUBNUB.init({
-        publish_key: 'Your Publish Key Here',
-        subscribe_key: 'Your Subscribe Key Here'
-    });
   }
 
   componentDidMount() {
@@ -56,7 +43,7 @@ export class App extends Component {
     this.props.pubnub.subscribe({
       channel: this.state.user.id,
       message: (message) => {
-        if (this.state.title == '待辦事項') {
+        if (this.state.selectedNav == 1) {
           this._getToDos();
         }
       }
@@ -88,25 +75,25 @@ export class App extends Component {
   }
 
   _openMenu(e) {
-    this.refs.leftNav.toggle();
+    this.refs.nav.refs.leftNav.toggle();
   }
 
   _handleNavSelected(e, value) {
     if (value == 1) {
-      this.setState({selectedNav: value, title: '待辦事項'});
+      this.setState({selectedNav: value});
       this._getToDos();
     } else if (value == 2) {
-      this.setState({selectedNav: value, title: '封存事項'});
+      this.setState({selectedNav: value});
       this._getToDos(true);
     } else if (value == 3) {
       this.setState({showLogoutModal: true});
     }
 
-    this.refs.leftNav.toggle();
+    this.refs.nav.refs.leftNav.toggle();
   }
 
   _newToDo() {
-    const snackbar = this.refs.snackbar;
+    const snackbar = this.refs.snackbars.refs.success;
 
     let title = this.refs.input.getValue();
     let creatorId = this.state.user.id;
@@ -161,11 +148,6 @@ export class App extends Component {
     this.setState({selectValue: value});
   }
 
-  _handleSnackbarCancel() {
-    const snackbar = this.refs.snackbar;
-    snackbar.dismiss();
-  }
-
   _handleToDoClick(index, event, value) {
     let todo = this.state.todos[index];
     todo.set('isDone', value);
@@ -201,12 +183,8 @@ export class App extends Component {
     if (this.state.user.friends) {
       users = users.concat(this.state.user.friends.data);
     }
-    let coverPath = '/img/default-cover.jpg';
-    if (this.state.user.cover) {
-      coverPath = this.state.user.cover.source;
-    }
 
-    let title = this.state.title;
+    let title = NAVS[this.state.selectedNav-1].title;
     if (this.state.loadingStatus == 'loading') {
       title += ' (...)';
     } else {
@@ -216,7 +194,7 @@ export class App extends Component {
     return (
       <div>
         <AppBar
-          className={this.state.title == '待辦事項' ? 'todo-list' : 'archive-list'}
+          className={this.state.selectedNav == 1 ? 'todo-list' : 'archive-list'}
           style={{position: 'fixed', top: 0, left: 0}}
           title={title}
           showMenuIconButton={true}
@@ -258,32 +236,10 @@ export class App extends Component {
           onRequestClose={this._handleLogoutModalClose.bind(this)}>
           這並不會將您的 Facebook 帳號一起登出
         </Dialog>
-        <Snackbar ref="snackbar"
-          message="ToDo 創建成功"
-          action="取消"
-          autoHideDuration={1000}
-          onActionTouchTap={this._handleSnackbarCancel.bind(this)}/>
-        <LeftNav ref="leftNav" docked={false} selectedIndex={1}
-          header={
-            <Card>
-              <CardMedia style={{height: 180}} overlay={
-                <CardHeader
-                  title={this.state.user.name}
-                  subtitle={this.state.user.email}
-                  avatar={'//graph.facebook.com/v2.5/' + this.state.user.id + '/picture?type=large'} />
-                }>
-                <img src={coverPath}/>
-              </CardMedia>
-            </Card>
-          }>
-          <SelectableList
-            valueLink={{value: this.state.selectedNav, requestChange: this._handleNavSelected.bind(this)}}>
-            <ListItem value={1} primaryText="待辦事項" leftIcon={<FontIcon className="material-icons">inbox</FontIcon>} />
-            <ListItem value={2} primaryText="封存事項" leftIcon={<FontIcon className="material-icons">archive</FontIcon>} />
-            <ListDivider />
-            <ListItem value={3} primaryText="登出" leftIcon={<FontIcon className="material-icons">exit_to_app</FontIcon>} />
-          </SelectableList>
-        </LeftNav>
+
+        <Nav ref="nav" user={this.state.user} selectedNav={this.state.selectedNav} handleNavSelected={this._handleNavSelected.bind(this)} />
+
+        <Snackbars ref="snackbars" />
       </div>
     );
   }

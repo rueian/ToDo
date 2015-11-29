@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
-import { FBAvatar } from './FBAvatar';
+import { avatarPath } from './avatarPath';
+import Avatar from 'material-ui/lib/avatar';
 import Checkbox from 'material-ui/lib/checkbox';
 
 export class TaskList extends Component {
@@ -13,7 +14,7 @@ export class TaskList extends Component {
           key={todo.id}
           primaryText={todo.get('title')}
           leftCheckbox={<Checkbox defaultChecked={todo.get('isDone')} onCheck={this.props.handleToDoClick.bind(null, index)}/>}
-          rightAvatar={FBAvatar(todo.get('creatorId'))}/>
+          rightAvatar={<Avatar src={avatarPath(todo.get('creatorId'))} />}/>
       )
     });
     return (<List>{todos}</List>);
