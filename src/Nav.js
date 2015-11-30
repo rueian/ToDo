@@ -45,7 +45,7 @@ export class Nav extends Component {
           valueLink={{value: this.props.selectedNav, requestChange: this.props.handleNavSelected}}>
           { navs }
           <ListDivider />
-          <ListItem value={3} primaryText="登出" leftIcon={<FontIcon className="material-icons">exit_to_app</FontIcon>} />
+          <ListItem value={99} primaryText="登出" leftIcon={<FontIcon className="material-icons">exit_to_app</FontIcon>} />
         </SelectableList>
       </LeftNav>
     )

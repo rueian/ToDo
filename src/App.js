@@ -39,26 +39,26 @@ export class App extends Component {
 
   componentDidMount() {
     this._getFB();
-    this._getToDos();
+    this._getToDos(1);
     this.props.pubnub.subscribe({
       channel: this.state.user.id,
-      message: (message) => {
-        if (this.state.selectedNav == 1) {
-          this._getToDos();
-        }
-      }
+      message: (message) => this._getToDos(this.state.selectedNav)
     });
   }
 
-  _getToDos(isDone) {
+  _getToDos(index) {
     this.setState({loadingStatus: 'loading'});
 
     let query = new Parse.Query(Todo);
-    query.equalTo('userId', this.state.user.id);
-    if (isDone) {
+    if (index == 1) {
+      query.equalTo('userId', this.state.user.id);
+      query.notEqualTo('isDone', true);
+    } else if (index == 2) {
+      query.equalTo('userId', this.state.user.id);
       query.equalTo('isDone', true);
     } else {
-      query.notEqualTo('isDone', true);
+      query.equalTo('creatorId', this.state.user.id);
+      query.notEqualTo('userId', this.state.user.id);
     }
     query.descending('createdAt');
     query.find().then((todos) => {
@@ -79,13 +79,10 @@ export class App extends Component {
   }
 
   _handleNavSelected(e, value) {
-    if (value == 1) {
+    if (value < 99) {
       this.setState({selectedNav: value});
-      this._getToDos();
-    } else if (value == 2) {
-      this.setState({selectedNav: value});
-      this._getToDos(true);
-    } else if (value == 3) {
+      this._getToDos(value);
+    } else {
       this.setState({showLogoutModal: true});
     }
 
@@ -100,7 +97,8 @@ export class App extends Component {
     let userId = this.state.selectValue || userId;
 
     if (!title) {
-      return this.setState({titleError: '請輸入內容'});
+      this.setState({titleError: '請輸入內容'});
+      return;
     } else {
       this.setState({titleError: ''});
     }
@@ -115,22 +113,18 @@ export class App extends Component {
 
       acl.setReadAccess(user, true);
       acl.setWriteAccess(user, true);
+      acl.setReadAccess(Parse.User.current(), true);
+      acl.setWriteAccess(Parse.User.current(), true);
 
       todo.setACL(acl);
 
-      return todo.save({
-        title,
-        userId,
-        creatorId
-      });
-    }, (err) => {
-      console.error(err);
+      return todo.save({ title, userId, creatorId });
     }).then((todo) => {
       snackbar.show();
-      this.props.pubnub.publish({
-        channel: userId,
-        message: 'refresh'
-      });
+      this._fireRefresh(userId);
+      if (userId != creatorId) {
+        this._fireRefresh(creatorId);
+      }
     }, (err) => {
       console.error(err);
     });
@@ -152,10 +146,20 @@ export class App extends Component {
     let todo = this.state.todos[index];
     todo.set('isDone', value);
     todo.save().then((res) => {
-      this.setState({todos: this.state.todos.filter((t) => {return t.id != todo.id})});
+      this._fireRefresh(todo.get('userId'));
+      if (todo.get('userId') != todo.get('creatorId')) {
+        this._fireRefresh(todo.get('creatorId'));
+      }
     }, (err) => {
       console.error(err);
     })
+  }
+
+  _fireRefresh(channel) {
+    this.props.pubnub.publish({
+      channel: channel,
+      message: 'refresh'
+    });
   }
 
   _onLogout() {
@@ -205,7 +209,7 @@ export class App extends Component {
           style={{position: 'fixed', top: 8, right: 12, zIndex: 5}}/>
         <RefreshIndicator size={50} left={window.innerWidth / 2 - 25} top={100} status={this.state.loadingStatus} />
         <div style={{padding: 12, maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', marginTop: 60}}>
-          <TaskList todos={this.state.todos} handleToDoClick={this._handleToDoClick.bind(this)}/>
+          <TaskList user={this.state.user} todos={this.state.todos} handleToDoClick={this._handleToDoClick.bind(this)}/>
         </div>
         <FloatingActionButton style={{position: 'fixed', right: 20, bottom: 20}} onTouchTap={this._openModal.bind(this)}>
           <FontIcon className="material-icons">add</FontIcon>

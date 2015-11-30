@@ -8,13 +8,19 @@ import Checkbox from 'material-ui/lib/checkbox';
 export class TaskList extends Component {
   render() {
     let todos = this.props.todos.map((todo, index) => {
+      let avatar;
+      if (this.props.user.id == todo.get('creatorId')) {
+        avatar = <Avatar src={avatarPath(todo.get('userId'))} />;
+      } else {
+        avatar = <Avatar src={avatarPath(todo.get('creatorId'))} />;
+      }
       return (
         <ListItem
           style={{textDecoration: todo.get('isDone') ? 'line-through' : 'initial'}}
           key={todo.id}
           primaryText={todo.get('title')}
           leftCheckbox={<Checkbox defaultChecked={todo.get('isDone')} onCheck={this.props.handleToDoClick.bind(null, index)}/>}
-          rightAvatar={<Avatar src={avatarPath(todo.get('creatorId'))} />}/>
+          rightAvatar={avatar}/>
       )
     });
     return (<List>{todos}</List>);
