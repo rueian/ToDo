@@ -18,26 +18,16 @@ function showLogin() {
 function parseLogin() {
   showLoading();
 
-  let noTimeout = true;
-  let timeoutId = setTimeout(() => {
-    noTimeout = false;
-    showLogin();
-  }, 5000);
+  setTimeout(() => showLogin(), 6000);
 
   Parse.FacebookUtils.logIn('public_profile,email,user_friends', {
-    success: function(user) {
-      if (noTimeout) {
-        clearTimeout(timeoutId);
-        if (user.get('facebookId')) {
-          showApp(user);
-        } else {
-          user.set('facebookId', user.get('authData').facebook.id);
-          user.save().then(() => showApp(user));
-        }
+    success: (user) => {
+      if (user.get('facebookId')) {
+        showApp(user);
+      } else {
+        user.set('facebookId', user.get('authData').facebook.id);
+        user.save().then(() => showApp(user));
       }
-    },
-    error: function(user, error) {
-      alert('登入失敗，請稍候再試')
     }
   });
 }
