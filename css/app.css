@@ -50,12 +50,16 @@ html, body {
   text-decoration: none;
 }
 
-.todo-list {
+.list-1 {
   background-color: #1e88e5 !important;
 }
 
-.archive-list {
-  background-color: #8e24aa !important;
+.list-2 {
+  background-color: #AB47BC !important;
+}
+
+.list-3 {
+  background-color: #81c784 !important;
 }
 
 .white {

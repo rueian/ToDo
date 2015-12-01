@@ -198,7 +198,7 @@ export class App extends Component {
     return (
       <div>
         <AppBar
-          className={this.state.selectedNav == 1 ? 'todo-list' : 'archive-list'}
+          className={'list-' + this.state.selectedNav}
           style={{position: 'fixed', top: 0, left: 0}}
           title={title}
           showMenuIconButton={true}
