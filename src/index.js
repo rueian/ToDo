@@ -18,7 +18,7 @@ function showLogin() {
 function parseLogin() {
   showLoading();
 
-  setTimeout(() => showLogin(), 6000);
+  setTimeout(() => showLogin(), 20000);
 
   Parse.FacebookUtils.logIn('public_profile,email,user_friends', {
     success: (user) => {
