@@ -232,6 +232,7 @@ export class App extends Component {
           title="創建 ToDo"
           actions={modalAction}
           open={this.state.showDialog}
+          autoScrollBodyContent={true}
           onRequestClose={this._closeModal.bind(this)}
           contentStyle={{width: '95%'}}>
 
