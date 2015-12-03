@@ -32,6 +32,12 @@ $ cd parse
 $ parse deploy
 ```
 
+## Test
+
+```
+$ npm test
+```
+
 ## License
 
 CC0 (public domain)
