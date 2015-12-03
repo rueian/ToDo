@@ -171,6 +171,10 @@ export class App extends Component {
     this.setState({showLogoutModal: false});
   }
 
+  _openGithub() {
+    window.open('https://github.com/rueian/ToDo','_blank');
+  }
+
   render() {
     const modalAction = [
       { text: '取消', onTouchTap: this._closeModal.bind(this) },
@@ -205,7 +209,7 @@ export class App extends Component {
 
         <IconButton
           iconClassName="fa fa-github white"
-          linkButton={true} href="https://github.com/rueian/ToDo"
+          onTouchTap={this._openGithub.bind(this)}
           style={{position: 'fixed', top: 8, right: 12, zIndex: 5}}/>
 
         <RefreshIndicator
