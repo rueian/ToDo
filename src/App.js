@@ -7,12 +7,12 @@ import Dialog from 'material-ui/lib/dialog';
 import TextField from 'material-ui/lib/text-field';
 import SelectField from 'material-ui/lib/select-field';
 import RefreshIndicator from 'material-ui/lib/refresh-indicator';
-import { TaskList } from './TaskList';
+import Snackbar from 'material-ui/lib/snackbar';
 import IconButton from 'material-ui/lib/icon-button';
 import Parse from 'parse';
+import { TaskList } from './TaskList';
 import { NAVS } from './navs'
 import { Nav } from './nav';
-import { Snackbars } from './Snackbars';
 
 const Todo = Parse.Object.extend("Todo");
 
@@ -90,7 +90,7 @@ export class App extends Component {
   }
 
   _newToDo() {
-    const snackbar = this.refs.snackbars.refs.success;
+    const snackbar = this.refs.snackbar;
 
     let title = this.refs.input.getValue();
     let creatorId = this.state.user.id;
@@ -198,33 +198,51 @@ export class App extends Component {
     return (
       <div>
         <AppBar
-          className={'list-' + this.state.selectedNav}
-          style={{position: 'fixed', top: 0, left: 0}}
           title={title}
           showMenuIconButton={true}
+          className={'list-' + this.state.selectedNav}
+          style={{position: 'fixed', top: 0, left: 0}}
           onLeftIconButtonTouchTap={this._openMenu.bind(this)}/>
-        <IconButton iconClassName="fa fa-github white"
-          linkButton={true}
-          href="https://github.com/rueian/ToDo"
+
+        <IconButton
+          iconClassName="fa fa-github white"
+          linkButton={true} href="https://github.com/rueian/ToDo"
           style={{position: 'fixed', top: 8, right: 12, zIndex: 5}}/>
-        <RefreshIndicator size={50} left={window.innerWidth / 2 - 25} top={100} status={this.state.loadingStatus} />
+
+        <RefreshIndicator
+          size={50}
+          left={window.innerWidth / 2 - 25}
+          top={100}
+          status={this.state.loadingStatus} />
+
         <div style={{padding: 12, maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', marginTop: 60}}>
           <TaskList user={this.state.user} todos={this.state.todos} handleToDoClick={this._handleToDoClick.bind(this)}/>
         </div>
-        <FloatingActionButton style={{position: 'fixed', right: 20, bottom: 20}} onTouchTap={this._openModal.bind(this)}>
+
+        <FloatingActionButton
+          style={{position: 'fixed', right: 20, bottom: 20}}
+          onTouchTap={this._openModal.bind(this)}>
+
           <FontIcon className="material-icons">add</FontIcon>
+
         </FloatingActionButton>
-        <Dialog ref="modal"
+
+        <Dialog
+          ref="modal"
           title="創建 ToDo"
           actions={modalAction}
           open={this.state.showDialog}
           onRequestClose={this._closeModal.bind(this)}
           contentStyle={{width: '95%'}}>
-          <TextField ref="input"
+
+          <TextField
+            ref="input"
             errorText={this.state.titleError}
             hintText="12/4 要交 Web App 作業"
             floatingLabelText="輸入待辦事項內容" />
+
           <br />
+
           <SelectField
             valueLink={{value: this.state.selectValue, requestChange: this._handleSelectValueChange.bind(this)}}
             floatingLabelText="選擇指派對象"
@@ -232,6 +250,7 @@ export class App extends Component {
             displayMember="name"
             menuItems={users} />
         </Dialog>
+
         <Dialog
           title="你確定要登出嗎？"
           actions={logoutActions}
@@ -241,9 +260,16 @@ export class App extends Component {
           這並不會將您的 Facebook 帳號一起登出
         </Dialog>
 
-        <Nav ref="nav" user={this.state.user} selectedNav={this.state.selectedNav} handleNavSelected={this._handleNavSelected.bind(this)} />
+        <Nav
+          ref="nav"
+          user={this.state.user}
+          selectedNav={this.state.selectedNav}
+          handleNavSelected={this._handleNavSelected.bind(this)} />
 
-        <Snackbars ref="snackbars" />
+        <Snackbar
+          ref="snackbar"
+          message="ToDo 創建成功"
+          autoHideDuration={1000} />
       </div>
     );
   }
