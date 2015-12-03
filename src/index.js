@@ -38,7 +38,7 @@ function showApp(user) {
       subscribe_key: PUBNUB_SUB_KEY,
       ssl: true
   });
-  render(<App user={user} pubnub={pubnub}/>, document.getElementById('content'));
+  render(<App user={user} pubnub={pubnub} FB={FB} Parse={Parse} />, document.getElementById('content'));
 
   document.getElementById('welcome').classList.add("hidden");
   document.getElementById('content').classList.remove("hidden");

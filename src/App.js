@@ -9,12 +9,9 @@ import SelectField from 'material-ui/lib/select-field';
 import RefreshIndicator from 'material-ui/lib/refresh-indicator';
 import Snackbar from 'material-ui/lib/snackbar';
 import IconButton from 'material-ui/lib/icon-button';
-import Parse from 'parse';
 import { TaskList } from './TaskList';
 import { NAVS } from './navs'
 import { Nav } from './nav';
-
-const Todo = Parse.Object.extend("Todo");
 
 export class App extends Component {
 
@@ -47,9 +44,10 @@ export class App extends Component {
   }
 
   _getToDos(index) {
+    const Todo = this.props.Parse.Object.extend("Todo");
     this.setState({loadingStatus: 'loading'});
 
-    let query = new Parse.Query(Todo);
+    let query = new this.props.Parse.Query(Todo);
     if (index == 1) {
       query.equalTo('userId', this.state.user.id);
       query.notEqualTo('isDone', true);
@@ -69,7 +67,7 @@ export class App extends Component {
   }
 
   _getFB() {
-    FB.api('/me', {fields: 'name,friends,cover,email'}, (response) => {
+    this.props.FB.api('/me', {fields: 'name,friends,cover,email'}, (response) => {
       this.setState({user: response});
     });
   }
@@ -90,6 +88,7 @@ export class App extends Component {
   }
 
   _newToDo() {
+    const Todo = this.props.Parse.Object.extend("Todo");
     const snackbar = this.refs.snackbar;
 
     let title = this.refs.input.getValue();
@@ -105,16 +104,16 @@ export class App extends Component {
 
     this.setState({showDialog: false});
 
-    let userQuery = new Parse.Query(Parse.User);
+    let userQuery = new this.props.Parse.Query(this.props.Parse.User);
     userQuery.equalTo('facebookId', userId);
     userQuery.first().then((user) => {
       let todo = new Todo();
-      let acl = new Parse.ACL();
+      let acl = new this.props.Parse.ACL();
 
       acl.setReadAccess(user, true);
       acl.setWriteAccess(user, true);
-      acl.setReadAccess(Parse.User.current(), true);
-      acl.setWriteAccess(Parse.User.current(), true);
+      acl.setReadAccess(this.props.Parse.User.current(), true);
+      acl.setWriteAccess(this.props.Parse.User.current(), true);
 
       todo.setACL(acl);
 
@@ -163,7 +162,7 @@ export class App extends Component {
   }
 
   _onLogout() {
-    Parse.User.logOut().then(() => {
+    this.props.Parse.User.logOut().then(() => {
       location.reload();
     });
   }
