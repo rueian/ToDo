@@ -41,5 +41,8 @@ module.exports = {
       loaders: ['babel'],
       include: path.join(__dirname, 'config')
     }]
+  },
+  resolve: {
+    root: __dirname
   }
 };
