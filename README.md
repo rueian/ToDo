@@ -3,6 +3,10 @@ ToDo
 
 A simple ToDo list that enables you to easily assign tasks to your friends on Facebook.
 
+## Installation
+![](http://i.imgur.com/2WaxLns.png)
+[到 Firefox OS Marketplace 下載安裝](https://marketplace.firefox.com/app/todo-4)
+
 ## Demo
 
 ![](http://g.recordit.co/92duvRcRvc.gif)
